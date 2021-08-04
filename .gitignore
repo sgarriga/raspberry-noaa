@@ -1,3 +1,5 @@
 predict/
 map/
+logs/
+__pycache__/
 panel.db
