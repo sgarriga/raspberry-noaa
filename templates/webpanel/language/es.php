@@ -11,5 +11,8 @@ $lang = array(
   "of" => "de",
   "prev" => "Anterior",
   "next" => "Siguiente",
+  "sunrise" => "Amanecer",
+  "sunset" => "Puesta del Sol",
+  "noon" => "Mediodía Solar",
 );
 ?>

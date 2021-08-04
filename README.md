@@ -3,6 +3,10 @@
 # NOAA and Meteor automated capture using Raspberry PI
 Most of the code and setup stolen from: [Instructables](https://www.instructables.com/id/Raspberry-Pi-NOAA-Weather-Satellite-Receiver/)
 
+## SG tweaks
+  - New page with Sunrise/Sunset and Moon phase
+  - Adding color coding to pass status
+
 ## New Features!
   - [ISS SSTV reception and decoding](ISS.md)
   - [A webpanel!](WEBPANEL.md)

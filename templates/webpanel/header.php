@@ -2,7 +2,7 @@
   ini_set('display_errors', 1);
   ini_set('display_startup_errors', 1);
   error_reporting(E_ALL);
-  date_default_timezone_set('America/Argentina/Buenos_Aires');
+  date_default_timezone_set('America/New_York');
   $page = basename($_SERVER['PHP_SELF']);
   $configs = include('Config.php');
   $lang = $configs->lang;
@@ -21,6 +21,7 @@
 <div class="topnav">
   <a class="<?php if($page == 'passes.php'){ echo ' active"';}?>" href="passes.php"><?php echo $lang['passes']; ?></a>
   <a class="<?php if($page == 'index.php' || $page == 'detail.php'){ echo ' active"';}?>" href="index.php"><?php echo $lang['images']; ?></a>
+  <a class="<?php if($page == 'daylight.php'){ echo ' active"';}?>" href="daylight.php"><?php echo $lang['sunrise']."/".$lang["sunset"]; ?></a>
 </div>
 <div class="container">
 

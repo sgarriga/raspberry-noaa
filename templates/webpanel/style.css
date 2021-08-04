@@ -65,8 +65,21 @@ body {
     color: white;
 }
 
-#passes tr.inactive {
+#passes tr.passdone {
     color: lightgray;
+}
+#passes tr.passwait {
+    color: black;
+}
+#passes tr.passruns {
+    color: green;
+}
+#passes tr.passfail {
+    color: red;
+}
+#passes tr.passskip {
+    color: lightgray;
+    text-decoration: line-through;
 }
 
 #satimg {

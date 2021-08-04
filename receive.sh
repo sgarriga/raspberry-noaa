@@ -19,6 +19,7 @@ SUN_ELEV=$(python3 "$NOAA_HOME"/sun.py "$PASS_START")
 if pgrep "rtl_fm" > /dev/null
 then
 	log "There is an existing rtl_fm instance running, I quit" "ERROR"
+        sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 4 where pass_start = $5);"
 	exit 1
 fi
 
@@ -29,6 +30,8 @@ fi
 # $5 = EPOC start time
 # $6 = Time to capture
 # $7 = Satellite max elevation
+
+sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 2 where pass_start = $5);"
 
 log "Starting rtl_fm record" "INFO"
 timeout "${6}" /usr/local/bin/rtl_fm ${BIAS_TEE} -f "${2}"M -s 60k -g $GAIN -E wav -E deemp -F 9 - | /usr/bin/sox -t raw -e signed -c 1 -b 16 -r 60000 - "${RAMFS_AUDIO}/audio/${3}.wav" rate 11025

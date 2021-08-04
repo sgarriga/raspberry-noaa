@@ -7,12 +7,9 @@
     <th><?php echo $lang['max_elev']; ?></th>
   </tr>
   <?php
+    $state_style = array("passdone", "passwait", "passruns", "passfail", "passskip");
     foreach ($passes as $pass) {
-      if ($pass['is_active'] == false) {
-        echo "<tr class='inactive'>";
-      } else {
-        echo "<tr>";
-      }
+      echo "<tr class='". $state_style[$pass['is_active']] ."'>";
       echo "<td>". $pass['sat_name'] ."</td>";
       echo "<td>". date('H:i:s', $pass['pass_start']) ."</td>";
       echo "<td>". date('H:i:s', $pass['pass_end']) ."</td>";

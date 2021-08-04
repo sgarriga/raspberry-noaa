@@ -34,7 +34,7 @@
         echo "<td><div id =\"satimgdiv\"><a href=". "detail.php?id=" . $image['id'] ."><img id=\"satimg\" src=". $baseurl . "thumb/" . $image['file_path'] . $ending ."></img></a></div>";
         echo "<ul><li>". $image['sat_name'] ."</li>";
         echo "<li> " . $lang['elev'] . ": ". $image['max_elev'] ."°</li>";
-        echo "<li>". date('d/m/Y H:i:s', $image['pass_start']) ."</li></ul></td>";
+        echo "<li>". date($configs->date_format . ' H:i:s', $image['pass_start']) ."</li></ul></td>";
         if($col_count==3) {
           echo "</tr>";
         }

@@ -2,12 +2,12 @@
 import ephem
 import time
 import sys
-timezone = change_tz + time.localtime().tm_isdst
+timezone = 5 + time.localtime().tm_isdst
 date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(sys.argv[1])-(timezone*60*60)))
 
 obs=ephem.Observer()
-obs.lat='change_latitude'
-obs.long='change_longitude'
+obs.lat='34.898180'
+obs.long='-84.064322'
 obs.date = date
 
 sun = ephem.Sun(obs)

@@ -3,8 +3,7 @@ create table predict_passes(
     pass_start timestamp primary key default (strftime('%s', 'now')) not null,
     pass_end timestamp default (strftime('%s', 'now')) not null,
     max_elev int not null,
-    is_active boolean);
-
+    is_active int not null);
 
 CREATE TABLE decoded_passes(
     id integer primary key autoincrement,

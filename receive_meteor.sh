@@ -42,11 +42,16 @@ fi
 # $6 = Time to capture
 # $7 = Satellite max elevation
 
+sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 2 where pass_start = $5;"
+
 log "Starting rtl_fm record" "INFO"
 timeout "${6}" /usr/local/bin/rtl_fm ${BIAS_TEE} -M raw -f "${2}"M -s 288k -g $GAIN | sox -t raw -r 288k -c 2 -b 16 -e s - -t wav "${RAMFS_AUDIO}/audio/${3}.wav" rate 96k
 
 log "Demodulation in progress (QPSK)" "INFO"
-meteor_demod -B -o "${METEOR_OUTPUT}/${3}.qpsk" "${RAMFS_AUDIO}/audio/${3}.wav"
+/usr/local/bin/meteor_demod -B -o "${METEOR_OUTPUT}/${3}.qpsk" "${RAMFS_AUDIO}/audio/${3}.wav"
+
+# log "Demodulation in progress II (OQPSK)" "INFO"
+# /usr/local/bin/meteor_demod -B -m oqpsk -o "${METEOR_OUTPUT}/${3}.oqpsk" "${RAMFS_AUDIO}/audio/${3}.wav"
 
 if [ "$DELETE_AUDIO" = true ]; then
     log "Deleting audio files" "INFO"
@@ -91,4 +96,5 @@ if [ -f "${METEOR_OUTPUT}/${3}.dec" ]; then
     sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 0 where (predict_passes.pass_start) in (select predict_passes.pass_start from predict_passes inner join decoded_passes on predict_passes.pass_start = decoded_passes.pass_start where decoded_passes.id = $pass_id);"
 else
     log "Decoding failed, either a bad pass/low SNR or a software problem" "ERROR"
+    sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 3 where pass_start = $5;"
 fi
