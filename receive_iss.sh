@@ -25,7 +25,7 @@ fi
 # $6 = Time to capture
 # $7 = Satellite max elevation
 
-sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 2 where pass_start = $5;"
+sqlite3 "$NOAA_HOME/panel.db" "update predict_passes set is_active = 2 where pass_start = $5;"
 
 log "Starting rtl_fm record" "INFO"
 timeout "${6}" /usr/local/bin/rtl_fm ${BIAS_TEE} -M fm -f 145.8M -s 48k -g $GAIN -E dc -E wav -E deemp -F 9 - | sox -t raw -r 48k -c 1 -b 16 -e s - -t wav "${NOAA_OUTPUT}/audio/${3}.wav" rate 11025
@@ -54,5 +54,7 @@ if [ -f "$NOAA_HOME/demod.py" ]; then
             fi
         fi
         sqlite3 "$NOAA_HOME/panel.db" "update predict_passes set is_active = 0 where (predict_passes.pass_start) in (select predict_passes.pass_start from predict_passes inner join decoded_passes on predict_passes.pass_start = decoded_passes.pass_start where decoded_passes.id = $pass_id);"
+    else
+        sqlite3 "$NOAA_HOME/panel.db" "update predict_passes set is_active = 0 where pass_start = $5;"
     fi
 fi
