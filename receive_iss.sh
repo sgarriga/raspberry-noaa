@@ -25,6 +25,8 @@ fi
 # $6 = Time to capture
 # $7 = Satellite max elevation
 
+sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 2 where pass_start = $5;"
+
 log "Starting rtl_fm record" "INFO"
 timeout "${6}" /usr/local/bin/rtl_fm ${BIAS_TEE} -M fm -f 145.8M -s 48k -g $GAIN -E dc -E wav -E deemp -F 9 - | sox -t raw -r 48k -c 1 -b 16 -e s - -t wav "${NOAA_OUTPUT}/audio/${3}.wav" rate 11025
 
