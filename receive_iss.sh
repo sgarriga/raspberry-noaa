@@ -14,6 +14,7 @@ fi
 if pgrep "rtl_fm" > /dev/null
 then
     log "There is an already running rtl_fm instance but I dont care for now, I prefer this pass" "INFO"
+    $NOAA_HOME/mark_as_killed.sh
     pkill -9 -f rtl_fm
 fi
 

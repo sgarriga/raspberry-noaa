@@ -74,6 +74,7 @@ sudo apt install -yq predict \
                      socat \
                      php7.2-fpm \
                      php7.2-sqlite \
+                     php7.2-curl \
                      sqlite3
 
 if [ "$raspbian_version" == "stretch" ]; then
@@ -192,7 +193,7 @@ crontab -l | grep -q "raspberry-noaa"
 if [ $? -eq 0 ]; then
     log_done "Crontab for schedule.sh already exists"
 else
-    cat <(crontab -l) <(echo "1 0 * * * /home/pi/raspberry-noaa/schedule.sh") | crontab -
+    cat <(crontab -l) <(echo "1 0 * * * /home/pi/raspberry-noaa/schedule.sh >/home/pi/raspberry-noaa/logs/schedule.\`date +\%Y\%m\%d\` 2>&1") | crontab -
     log_done "Crontab installed"
 fi
 set -e

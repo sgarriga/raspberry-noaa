@@ -19,7 +19,7 @@ SUN_ELEV=$(python3 "$NOAA_HOME"/sun.py "$PASS_START")
 if pgrep "rtl_fm" > /dev/null
 then
 	log "There is an existing rtl_fm instance running, I quit" "ERROR"
-        sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 4 where pass_start = $5);"
+        sqlite3 $NOAA_HOME/panel.db "update predict_passes set is_active = 4 where pass_start = $5;"
 	exit 1
 fi
 
@@ -31,7 +31,7 @@ fi
 # $6 = Time to capture
 # $7 = Satellite max elevation
 
-sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 2 where pass_start = $5);"
+sqlite3 $NOAA_HOME/panel.db "update predict_passes set is_active = 2 where pass_start = $5;"
 
 log "Starting rtl_fm record" "INFO"
 timeout "${6}" /usr/local/bin/rtl_fm ${BIAS_TEE} -f "${2}"M -s 60k -g $GAIN -E wav -E deemp -F 9 - | /usr/bin/sox -t raw -e signed -c 1 -b 16 -r 60000 - "${RAMFS_AUDIO}/audio/${3}.wav" rate 11025
@@ -56,12 +56,12 @@ done
 rm "${NOAA_HOME}/map/${3}-map.png"
 
 if [ "${SUN_ELEV}" -gt "${SUN_MIN_ELEV}" ]; then
-	sqlite3 /home/pi/raspberry-noaa/panel.db "insert into decoded_passes (pass_start, file_path, daylight_pass, sat_type) values ($5,\"$3\", 1,1);"
+	sqlite3 $NOAA_HOME/panel.db "insert into decoded_passes (pass_start, file_path, daylight_pass, sat_type) values ($5,\"$3\", 1,1);"
 else
-	sqlite3 /home/pi/raspberry-noaa/panel.db "insert into decoded_passes (pass_start, file_path, daylight_pass, sat_type) values ($5,\"$3\", 0,1);"
+	sqlite3 $NOAA_HOME/panel.db "insert into decoded_passes (pass_start, file_path, daylight_pass, sat_type) values ($5,\"$3\", 0,1);"
 fi
 
-pass_id=$(sqlite3 /home/pi/raspberry-noaa/panel.db "select id from decoded_passes order by id desc limit 1;")
+pass_id=$(sqlite3 $NOAA_HOME/panel.db "select id from decoded_passes order by id desc limit 1;")
 
 if [ -n "$CONSUMER_KEY" ]; then
 	log "Posting to Twitter" "INFO"
@@ -72,7 +72,7 @@ if [ -n "$CONSUMER_KEY" ]; then
 	fi
 fi
 
-sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 0 where (predict_passes.pass_start) in (select predict_passes.pass_start from predict_passes inner join decoded_passes on predict_passes.pass_start = decoded_passes.pass_start where decoded_passes.id = $pass_id);"
+sqlite3 $NOAA_HOME/panel.db "update predict_passes set is_active = 0 where (predict_passes.pass_start) in (select predict_passes.pass_start from predict_passes inner join decoded_passes on predict_passes.pass_start = decoded_passes.pass_start where decoded_passes.id = $pass_id);"
 
 if [ "$DELETE_AUDIO" = true ]; then
 	log "Deleting audio files" "INFO"
